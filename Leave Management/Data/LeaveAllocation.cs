@@ -10,11 +10,11 @@ namespace Leave_Management.Data
         public int NumberOfDays { get; set; }
         public DateTime DateCreated { get; set; }
         [ForeignKey("EmployeeId")]
-        public Employee Employee { get; set; }
-        public string EmployeeId { get; set; }
+        public Employee Employee { get; set; }//Employee obj to whom these allocation is issued
+        public string EmployeeId { get; set; }//targeted employee id, get details and stored in Employe obj above
         [ForeignKey("LeaveTypeId")]
-        public LeaveType LeaveType { get; set; }
-        public int LeaveTypeId { get; set; }
+        public LeaveType LeaveType { get; set; } //leaveType obj 
+        public int LeaveTypeId { get; set; }// targetd Leave Type
         public int Period { get; set; }
     }
 }
