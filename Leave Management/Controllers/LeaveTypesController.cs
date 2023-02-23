@@ -30,7 +30,13 @@ namespace Leave_Management.Controllers
         // GET: LeaveTypesController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            if (!_repo.isExists(id))
+            {
+                return NotFound();
+            }
+            var leavetype = _repo.FindByID(id);
+            var model = _mapper.Map<LeaveType, LeaveTypeVM>(leavetype);
+            return View(model);
         }
 
         // GET: LeaveTypesController/Create
@@ -71,21 +77,42 @@ namespace Leave_Management.Controllers
         // GET: LeaveTypesController/Edit/5
         public ActionResult Edit(int id)
         {
-            //var NewData = new LeaveType.Get
-            return View();
+            if (!_repo.isExists(id))
+            {
+                return NotFound();
+            }
+            var leavetype = _repo.FindByID(id);
+            var model = _mapper.Map<LeaveType,LeaveTypeVM>(leavetype);
+            return View(model);
         }
 
         // POST: LeaveTypesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(LeaveTypeVM Data)
         {
             try
-            {
+            {   //Validation
+                if (!ModelState.IsValid)
+                {
+                    return View(Data);
+                }
+                var model = _mapper.Map<LeaveTypeVM, LeaveType>(Data);
+                var IsSuccess = _repo.Update(model);
+                if (!IsSuccess)
+                {
+                    ModelState.AddModelError("", "Something went wrong");
+                    return View(Data);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(Data);
+                }
                 return View();
             }
         }
@@ -93,16 +120,29 @@ namespace Leave_Management.Controllers
         // GET: LeaveTypesController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            if (!_repo.isExists(id))
+            {
+                return NotFound();
+            }
+            var leavetype = _repo.FindByID(id);
+            var model = _mapper.Map<LeaveType, LeaveTypeVM>(leavetype);
+            return View(model);
         }
 
         // POST: LeaveTypesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, LeaveType ToBeDeleted)
         {
             try
             {
+                var delete = _repo.FindByID(id);
+                if (delete == null)
+                {
+                    return NotFound();
+                }
+                //var model = _mapper.Map<LeaveType, LeaveTypeVM>(ToBeDeleted);
+                var IsSuccess = _repo.Delete(delete);
                 return RedirectToAction(nameof(Index));
             }
             catch
