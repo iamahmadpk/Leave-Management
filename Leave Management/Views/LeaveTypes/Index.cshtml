@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Leave_Management.Models.DetailsLeaveTypeVM>
+﻿@model IEnumerable<Leave_Management.Models.LeaveTypeVM>
 
 @{
     ViewData["Title"] = "Index";
@@ -26,6 +26,9 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
                 </td>
                 <td>
                     <div class="row">

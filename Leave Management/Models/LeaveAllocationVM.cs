@@ -16,7 +16,7 @@ namespace Leave_Management.Models
         public string EmployeeId { get; set; }//targeted employee id, get details and stored in Employe obj above
         
         //need to have access list of leaveType
-        public DetailsLeaveTypeVM LeaveType { get; set; } //leaveType obj 
+        public LeaveTypeVM LeaveType { get; set; } //leaveType obj 
         public int LeaveTypeId { get; set; }// targetd Leave Type
         //public int Period { get; set; }
 

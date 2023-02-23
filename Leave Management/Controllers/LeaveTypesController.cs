@@ -4,6 +4,7 @@ using Leave_Management.Data;
 using Leave_Management.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Leave_Management.Controllers
 {
@@ -22,7 +23,7 @@ namespace Leave_Management.Controllers
         public ActionResult Index()
         {
             var leavetype = _repo.FindAll().ToList();
-            var model = _mapper.Map<List<LeaveType>,List<DetailsLeaveTypeVM>>(leavetype); 
+            var model = _mapper.Map<List<LeaveType>,List<LeaveTypeVM>>(leavetype); 
             return View(model);
         }
 
@@ -41,21 +42,36 @@ namespace Leave_Management.Controllers
         // POST: LeaveTypesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(LeaveTypeVM Data)
         {
             try
             {
+                //Validation
+                if(!ModelState.IsValid) { 
+                    return View(Data);
+                }
+                var model = _mapper.Map <LeaveTypeVM,LeaveType>(Data);
+                model.DateCreated= DateTime.Now; 
+
+                var IsSuccess = _repo.Create(model);
+                if (!IsSuccess)
+                {
+                    ModelState.AddModelError("","Something went wrong");
+                    return View(Data);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("", "Something went wrong");
+                return View(Data);
             }
         }
 
         // GET: LeaveTypesController/Edit/5
         public ActionResult Edit(int id)
         {
+            //var NewData = new LeaveType.Get
             return View();
         }
 
